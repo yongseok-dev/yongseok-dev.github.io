@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오목</title>
+    <style>
+      #board {
+        margin: 0 auto;
+        width: 600px;
+        height: 600px;
+        background-image: linear-gradient(0deg, black 1px, transparent 0%),
+          linear-gradient(90deg, black 1px, transparent 0%);
+        background-size: 30px 30px;
+        background-color: #ac7d3f;
+      }
+      .tyle {
+        opacity: 0;
+        border: none;
+        margin: 5px;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+      .setStone {
+        margin: 0;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .bounding {
+        margin: 0;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        background-color: #fff;
+      }
+      .w15 {
+        width: 15px;
+      }
+      .h15 {
+        height: 15px;
+      }
+      .row {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="board"></div>
+
+    <script>
+      class Player {
+        constructor(name, stone) {
+          this.name = name;
+          this.stone = stone;
+        }
+      }
+
+      class Board {
+        constructor(size) {
+          this.size = size;
+          this.map = new Array(size)
+            .fill()
+            .map(() => new Array(size).fill(true));
+          console.log(this.map);
+        }
+        print() {
+          const board = document.getElementById("board");
+          board.innerHTML = ``;
+          for (let row = 0; row < this.size; row++) {
+            let output = `<div class="row"><div class="bounding w15"></div>`;
+            for (let col = 0; col < this.size; col++) {
+              output +=
+                this.map[row][col] === true
+                  ? `<input class="tyle" value="${row}/${col}">`
+                  : `<div class="setStone">${this.map[row][col]}</div>`;
+            }
+            board.innerHTML +=
+              output + `<div class="bounding w15"></div></div>`;
+          }
+          const h15 = `<div class="bounding h15"></div>`;
+          const bound = `<div class="row">${h15.repeat(this.size + 1)}</div>`;
+          board.innerHTML = bound + board.innerHTML + bound;
+        }
+        checkBounds(arr) {
+          return (
+            arr[0] >= 0 &&
+            arr[0] < this.size &&
+            arr[1] >= 0 &&
+            arr[1] < this.size
+          );
+        }
+        setStone(row, col, stoneType) {
+          if (this.checkBounds([row, col]) && this.map[row][col]) {
+            this.map[row][col] = stoneType;
+            return true;
+          }
+          return false;
+        }
+        checkVictory(row, col, stoneType) {
+          const count = [0, 0, 0, 0];
+          for (let i = -4; i < 5; i++) {
+            const value = [
+              [row - i, col + 0], //상하
+              [row + 0, col - i], //좌우
+              [row - i, col - i], //좌상우하
+              [row - i, col + i], //우상좌하
+            ];
+            for (let j = 0; j < count.length; j++) {
+              if (
+                this.checkBounds(value[j]) &&
+                stoneType === this.map[value[j][0]][value[j][1] * 1]
+              ) {
+                if (++count[j] >= 5) return true;
+              } else {
+                count[j] = 0;
+              }
+            }
+          }
+          return false;
+        }
+      }
+
+      class Omok {
+        static play(turn, board, userA, userB) {
+          const point = document.querySelectorAll(".tyle");
+          point.forEach((element) => {
+            element.addEventListener("click", (event) => {
+              let player = turn % 2 == 0 ? userA : userB;
+              const position = element.value.split("/").map((e) => {
+                return Number(e);
+              });
+              if (!board.setStone(...position, player.stone)) {
+                alert("둘 수 없는 자리입니다.");
+                return;
+              }
+              board.print();
+              turn++;
+              if (board.checkVictory(...position, player.stone)) {
+                alert(player.name + player.stone + "승! 게임 종료");
+                this.end();
+                return;
+              }
+              this.play(turn, board, userA, userB);
+            });
+          });
+        }
+        static end() {
+          const point = document.querySelectorAll(".tyle");
+          point.forEach((element) => {
+            element.removeEventListener();
+          });
+        }
+        static main() {
+          let userA = new Player("사용자A", "⚫");
+          let userB = new Player("사용자B", "⚪");
+          let board = new Board(19);
+          board.print();
+          let turn = 0;
+          this.play(turn, board, userA, userB);
+        }
+      }
+      Omok.main();
+    </script>
+  </body>
+</html>
