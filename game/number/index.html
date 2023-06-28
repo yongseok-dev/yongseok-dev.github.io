@@ -1,37 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Number Picker</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .number {
+      padding: 10px;
+      text-align: center;
+      margin: 5px;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+
+    .picked {
+      background-color: rgb(12, 94, 200);
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="numbers">
-      <div class="column">
-        <div id="n01" class="number">1</div>
-        <div id="n03" class="number">3</div>
-        <div id="n05" class="number">5</div>
-        <div id="n07" class="number">7</div>
-        <div id="n09" class="number">9</div>
-        <div id="n11" class="number">11</div>
-        <div id="n13" class="number">13</div>
-      </div>
-      <div class="column">
-        <div id="n02" class="number">2</div>
-        <div id="n04" class="number">4</div>
-        <div id="n06" class="number">6</div>
-        <div id="n08" class="number">8</div>
-        <div id="n10" class="number">10</div>
-        <div id="n12" class="number">12</div>
-      </div>
-    </div>
-    <div class="result">Click the button to pick a number.</div>
-    <button id="pickButton">Pick a Number</button>
+    <div class="column" id="column1"></div>
+    <div class="column" id="column2"></div>
   </div>
+  <button id="pickButton">Pick Number</button>
+  <div id="result"></div>
 
-  <script src="script.js"></script>
+  <script>
+    const column1 = document.getElementById('column1');
+    const column2 = document.getElementById('column2');
+    const pickButton = document.getElementById('pickButton');
+    const result = document.getElementById('result');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const numberOfPeople = parseInt(urlParams.get('people')) || 13;
+
+    if (numberOfPeople && numberOfPeople >= 1) {
+      createNumbers(numberOfPeople);
+    }
+
+    pickButton.addEventListener('click', pickNumber);
+
+    function createNumbers(num) {
+      for (let i = 1; i <= num; i++) {
+        const numberElement = document.createElement('div');
+        numberElement.classList.add('number');
+        numberElement.textContent = i;
+        numberElement.addEventListener('click', handleNumberClick);
+
+        if (i % 2 === 1) {
+          column1.appendChild(numberElement);
+        } else {
+          column2.appendChild(numberElement);
+        }
+      }
+    }
+
+    function pickNumber() {
+      const numbers = document.getElementsByClassName('number');
+      const availableNumbers = Array.from(numbers).filter(number => !number.classList.contains('picked'));
+
+      if (availableNumbers.length === 0) {
+        result.textContent = 'All numbers have been picked.';
+        return;
+      }
+
+      const randomNumberIndex = Math.floor(Math.random() * availableNumbers.length);
+      const pickedNumberElement = availableNumbers[randomNumberIndex];
+      const pickedNumber = pickedNumberElement.textContent;
+
+      pickedNumberElement.classList.add('picked');
+      result.textContent = `Picked Number: ${pickedNumber}`;
+    }
+
+    function handleNumberClick() {
+      if (this.classList.contains('picked')) {
+        this.classList.remove('picked');
+        result.textContent = '';
+      }
+    }
+  </script>
 </body>
 
 </html>
