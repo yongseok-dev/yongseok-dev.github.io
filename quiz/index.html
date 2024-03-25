@@ -22,6 +22,17 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+    }
+
+
     .question {
       font-size: 20px;
       margin-bottom: 20px;
@@ -48,6 +59,15 @@
     .btn:hover {
       background-color: #0056b3;
     }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -56,9 +76,13 @@
   <div class="container">
     <div class="question" id="question"></div>
     <ul class="options" id="options"></ul>
+    <input type="text" id="answer" autocomplete="off" onkeydown="if(event.keyCode===13) checkAnswer()">
     <button class="btn" id="submit" onclick="checkAnswer()">Submit</button>
     <div id="result"></div>
     <div id="remaining-questions"></div>
+    <div class="footer">
+      <button class="btn" id="answer-mode">전환</button>
+    </div>
   </div>
 
   <script src="quizData.json"></script> <!-- 외부 JSON 파일 로드 -->
