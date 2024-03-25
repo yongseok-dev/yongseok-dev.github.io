@@ -9,6 +9,7 @@ const questionElement = document.getElementById('question');
 const optionsElement = document.getElementById('options');
 const resultElement = document.getElementById('result');
 const submitElement = document.getElementById('submit');
+const remainingQuestionsElement = document.getElementById('remaining-questions');
 
 let currentQuestionIndex = 0;
 
@@ -94,6 +95,7 @@ function checkAnswer() {
       showWrongAnswers(); // 모든 퀴즈를 푼 후 오답 보여주기
     }, 1200); // 모든 퀴즈를 푼 후 2초 후에 결과를 표시함
   }
+  remainingQuestionsElement.textContent = `(Remaining questions: ${quizData.length - currentQuestionIndex})`;
 }
 
 // 퀴즈 초기화
