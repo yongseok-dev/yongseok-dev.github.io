@@ -31,6 +31,12 @@
       padding: 10px;
       text-align: center;
     }
+    .header {
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+    }
 
     .cont {
       max-width: 600px;
@@ -81,7 +87,6 @@
   <div class="header">
     <div class="cont">
       <span>
-
         <span id="correct"></span>
         <span id="remaining-questions"></span>
       </span>
@@ -94,6 +99,11 @@
     <input type="text" id="answer" autocomplete="off" onkeydown="if(event.keyCode===13) checkAnswer()">
     <button class="btn" id="submit" onclick="checkAnswer()">Submit</button>
     <div id="result"></div>
+  </div>
+  <div class="footer">
+    <div class="cont">
+      <button class="btn" id="answer-copy">오답저장</button>
+    </div>
   </div>
 
   <script src="quizData.json"></script> <!-- 외부 JSON 파일 로드 -->
