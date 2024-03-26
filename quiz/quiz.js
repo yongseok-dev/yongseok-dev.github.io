@@ -10,6 +10,7 @@ const answerElement = document.getElementById('answer');
 const resultElement = document.getElementById('result');
 const submitElement = document.getElementById('submit');
 const remainingQuestionsElement = document.getElementById('remaining-questions');
+const correctElement = document.getElementById('correct');
 const answerModeButton = document.getElementById('answer-mode');
 
 let currentQuestionIndex = 0;
@@ -89,7 +90,6 @@ function checkAnswer() {
     
     if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
       resultElement.textContent = 'Correct!';
-      console.log(1);
     } else {
       resultElement.textContent = `Incorrect! The correct answer is: ${correctAnswer}`;
       wrongAnswers.push({ // 오답 저장
@@ -97,7 +97,6 @@ function checkAnswer() {
         selectedAnswer: userAnswer,
         correctAnswer: correctAnswer
       });
-      console.log(2);
     }
   } else { // 선택형 모드일 때
     const selectedOption = document.querySelector('input[name="option"]:checked');
@@ -137,6 +136,7 @@ function checkAnswer() {
     answerModeButton.disabled = true; // 퀴즈 완료 시 답변 모드 버튼 비활성화
   }
   remainingQuestionsElement.textContent = `(Remaining questions: ${quizData.length - currentQuestionIndex})`;
+  correctElement.textContent = `Correct Answers: ${currentQuestionIndex - wrongAnswers.length} / ${quizData.length}`;
 }
 
 // 퀴즈 초기화 및 버튼 이벤트 리스너 설정
