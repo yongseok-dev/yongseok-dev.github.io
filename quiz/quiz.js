@@ -225,7 +225,10 @@ function checkAnswer() {
 
   // 다음 문제로 넘어감
   currentQuestionIndex++;
-  while (answerStatus[quizData[currentQuestionIndex].index]) {
+  while (
+    currentQuestionIndex < quizData.length &&
+    answerStatus[quizData[currentQuestionIndex].index]
+  ) {
     currentQuestionIndex++;
   }
   if (currentQuestionIndex < quizData.length) {
@@ -266,6 +269,12 @@ fetch('quizData.json') // 외부 JSON 파일 로드
     }
 
     shuffleArray(quizData); // 문제 순서 랜덤화
+    while (
+      currentQuestionIndex < quizData.length &&
+      answerStatus[quizData[currentQuestionIndex].index]
+    ) {
+      currentQuestionIndex++;
+    }
     initQuiz(); // 퀴즈 초기화
     correctElement.textContent = `${
       currentQuestionIndex - wrongAnswers.length
