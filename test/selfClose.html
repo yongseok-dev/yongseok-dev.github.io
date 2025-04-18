@@ -1,9 +1,33 @@
-<html>
-<script>
-$(document).ready(function() {
-    $("#close_window").click(function() {
-        window.open('about:blank', '_self').close();
-    });
-}); 
-</script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>JSInterface</title>
+</head>
+<body>
+
+  <button onclick="onClickButton()">팝업 닫기 요청</button>
+
+  <script>
+    function callInterfaces(returnParm) {
+      if (window.JSInterface) {
+        window.JSInterface.postMessage(JSON.stringify(returnParm));
+      } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.JSInterface) {
+        window.webkit.messageHandlers.JSInterface.postMessage(JSON.stringify(returnParm));
+      } else {
+        console.log("JSInterface를 찾을 수 없습니다.");
+      }
+    }
+
+    const parms = {
+      reqCommand: 'hidePopupWebView',
+      callbackParam: ''
+    };
+
+    function onClickButton() {
+      callInterfaces(parms);
+    }
+  </script>
+
+</body>
 </html>
