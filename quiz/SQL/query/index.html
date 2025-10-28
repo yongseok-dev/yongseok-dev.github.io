@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL 쿼리 결과 퀴즈</title>
+    <!-- Vue.js 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .choice:hover {
+        cursor: pointer;
+      }
+      .selected {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px #2563eb;
+      }
+      .correct {
+        background: #d1fae5 !important;
+        border-color: #059669;
+      }
+      .incorrect {
+        background: #fee2e2 !important;
+        border-color: #ef4444;
+      }
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.2s;
+      }
+      .fade-enter-from,
+      .fade-leave-to {
+        opacity: 0;
+      }
+      table {
+        width: 80%;
+      }
+      table td,
+      th {
+        border: solid #333 1px;
+      }
+    </style>
+  </head>
+  <body style="width: 100%" class="bg-gray-50 min-h-screen">
+    <div id="app" style="margin: 0 auto" class="container px-2 pb-10 pt-4">
+      <h1 class="text-3xl font-bold text-blue-700 mb-2 text-center">
+        SQL 쿼리 결과 퀴즈
+      </h1>
+      <div style="display: flex; justify-content: space-between">
+        <div style="margin: 0; display: inline-block; width: 50%">
+          <h3>TB_EMPLOYEE (직원)</h3>
+          <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+              <tr>
+                <th>EMP_ID</th>
+                <th>NAME</th>
+                <th>DEPT</th>
+                <th>SALARY</th>
+                <th>HIRE_DATE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>김철수</td>
+                <td>영업</td>
+                <td>3000000</td>
+                <td>2020-01-15</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>이영희</td>
+                <td>개발</td>
+                <td>4000000</td>
+                <td>2019-03-20</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>박민수</td>
+                <td>영업</td>
+                <td>3500000</td>
+                <td>2021-06-10</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>최지영</td>
+                <td>개발</td>
+                <td>4500000</td>
+                <td>2018-11-05</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>정수진</td>
+                <td>인사</td>
+                <td>3200000</td>
+                <td>2020-08-22</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>TB_PRODUCT (제품)</h3>
+          <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+              <tr>
+                <th>PROD_ID</th>
+                <th>PROD_NAME</th>
+                <th>CATEGORY</th>
+                <th>PRICE</th>
+                <th>STOCK</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>101</td>
+                <td>노트북</td>
+                <td>전자</td>
+                <td>150000</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>102</td>
+                <td>마우스</td>
+                <td>전자</td>
+                <td>20000</td>
+                <td>50</td>
+              </tr>
+              <tr>
+                <td>103</td>
+                <td>키보드</td>
+                <td>전자</td>
+                <td>35000</td>
+                <td>30</td>
+              </tr>
+              <tr>
+                <td>104</td>
+                <td>모니터</td>
+                <td>전자</td>
+                <td>200000</td>
+                <td>15</td>
+              </tr>
+              <tr>
+                <td>105</td>
+                <td>의자</td>
+                <td>가구</td>
+                <td>80000</td>
+                <td>20</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>TB_ORDERS (주문)</h3>
+          <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+              <tr>
+                <th>ORDER_ID</th>
+                <th>EMP_ID</th>
+                <th>PROD_ID</th>
+                <th>QUANTITY</th>
+                <th>ORDER_DATE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1001</td>
+                <td>1</td>
+                <td>101</td>
+                <td>2</td>
+                <td>2023-01-10</td>
+              </tr>
+              <tr>
+                <td>1002</td>
+                <td>2</td>
+                <td>102</td>
+                <td>5</td>
+                <td>2023-01-15</td>
+              </tr>
+              <tr>
+                <td>1003</td>
+                <td>1</td>
+                <td>103</td>
+                <td>3</td>
+                <td>2023-02-20</td>
+              </tr>
+              <tr>
+                <td>1004</td>
+                <td>3</td>
+                <td>101</td>
+                <td>1</td>
+                <td>2023-03-05</td>
+              </tr>
+              <tr>
+                <td>1005</td>
+                <td>2</td>
+                <td>104</td>
+                <td>2</td>
+                <td>2023-03-10</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr />
+        </div>
+        <div style="margin: 0; width: 50%; display: inline-block">
+          <div v-if="loading">
+            <i class="fas fa-spinner fa-spin text-blue-500 mr-1"></i> 문제 파일
+            로딩 중...
+          </div>
+          <template v-else>
+            <div v-if="quiz.length">
+              <div class="flex flex-col gap-4 mt-4 mb-6" v-if="!showResult">
+                <div class="flex items-center justify-between mb-1">
+                  <div>
+                    <span
+                      class="px-2 py-1 rounded bg-blue-100 text-blue-600 text-sm"
+                      >{{ currentQuestion.category }}</span
+                    >
+                    <span class="ml-2 text-gray-500"
+                      >{{ currentQuestion.table }}</span
+                    >
+                  </div>
+                  <span class="font-bold text-gray-800"
+                    >{{ currentIndex + 1 }}/{{ quiz.length }}</span
+                  >
+                </div>
+                <div class="p-3 bg-white rounded shadow">
+                  <div class="font-semibold mb-2 text-blue-800">
+                    {{ currentQuestion.question }}
+                  </div>
+                  <div class="text-sm mb-2">
+                    <span class="font-mono whitespace-pre-line text-gray-800"
+                      >{{ currentQuestion.query }}</span
+                    >
+                  </div>
+                </div>
+                <transition name="fade">
+                  <div v-if="!answered" key="choices">
+                    <div class="grid grid-cols-2 gap-2">
+                      <label
+                        v-for="(choice, idx) in currentQuestion.choices"
+                        :key="idx"
+                        class="choice p-3 border rounded text-lg bg-white hover:bg-blue-50"
+                        :class="{selected: selected === idx}"
+                        class="w-full cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          :id="'choice'+idx"
+                          :name="'choice'+currentIndex"
+                          :value="idx"
+                          v-model="selected"
+                          class="mr-2 hidden"
+                        />
+                        {{ choice }}
+                      </label>
+                    </div>
+                    <button
+                      @click="submit"
+                      :disabled="selected === null"
+                      class="mt-4 px-6 py-2 font-bold rounded bg-blue-600 text-white hover:bg-blue-700"
+                    >
+                      답안 제출
+                    </button>
+                  </div>
+                  <div v-else key="feedback">
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                      <div
+                        v-for="(choice, idx) in currentQuestion.choices"
+                        :key="idx"
+                        class="choice p-3 border rounded text-lg"
+                        :class="feedbackClass(idx)"
+                      >
+                        <span>{{ choice }}</span>
+                        <i
+                          v-if="showCorrectIcon(idx)"
+                          class="fas fa-check-circle text-green-500 ml-1"
+                        ></i>
+                        <i
+                          v-else-if="showIncorrectIcon(idx)"
+                          class="fas fa-times-circle text-red-500 ml-1"
+                        ></i>
+                      </div>
+                    </div>
+                    <div
+                      class="mb-1 py-2 text-green-700 font-semibold"
+                      v-if="isCorrect"
+                    >
+                      <i class="fas fa-check-circle mr-1"></i> 정답입니다!<br />
+                      <span class="text-gray-600"
+                        >결과: {{ currentQuestion.result }}</span
+                      >
+                    </div>
+                    <div class="mb-1 py-2 text-red-700 font-semibold" v-else>
+                      <i class="fas fa-times-circle mr-1"></i> 오답입니다.<br />
+                      <span class="text-gray-600"
+                        >정답: {{ currentQuestion.answer }} | 결과: {{
+                        currentQuestion.result }}</span
+                      >
+                    </div>
+                    <div
+                      class="text-gray-800 text-sm whitespace-pre-line bg-gray-50 rounded p-2 border mt-2 mb-2"
+                    >
+                      <span class="font-bold text-blue-700">해설:</span> {{
+                      currentQuestion.explanation }}
+                    </div>
+                    <div class="flex gap-2">
+                      <button
+                        @click="prev"
+                        :disabled="currentIndex === 0"
+                        class="px-4 py-2 rounded font-bold bg-gray-200 hover:bg-gray-300"
+                      >
+                        이전 문제
+                      </button>
+                      <button
+                        @click="next"
+                        :disabled="currentIndex === quiz.length-1"
+                        class="px-4 py-2 rounded font-bold bg-blue-600 text-white hover:bg-blue-700"
+                      >
+                        다음 문제
+                      </button>
+                      <button
+                        v-if="currentIndex === quiz.length-1"
+                        @click="showResult = true"
+                        class="px-4 py-2 rounded font-bold ml-auto bg-green-500 text-white hover:bg-green-600"
+                      >
+                        결과 보기
+                      </button>
+                    </div>
+                  </div>
+                </transition>
+                <div class="mt-6">
+                  <div class="h-3 w-full rounded bg-gray-200">
+                    <div
+                      class="h-3 rounded bg-blue-500"
+                      :style="{width: ((currentIndex+1)/quiz.length)*100+'%'}"
+                    ></div>
+                  </div>
+                  <div class="text-sm text-gray-500 mt-1">
+                    진행률: {{ Math.floor(((currentIndex+1)/quiz.length)*100)
+                    }}%
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <div class="text-center mt-8">
+                  <div class="text-2xl font-bold text-green-600 mb-2">
+                    퀴즈 완료!
+                  </div>
+                  <div class="mb-4">
+                    총 {{ correctCount }}/{{ quiz.length }}문제 정답 ({{
+                    Math.round(correctCount/quiz.length*100) }}%)
+                  </div>
+                  <div class="mb-2 text-xl text-blue-700 font-bold">
+                    오답/해설 복습
+                  </div>
+                  <ul class="mb-6">
+                    <li
+                      v-for="(q, idx) in quiz.filter((q,i)=>answers[i]!==q.answer)"
+                      :key="idx"
+                      class="mb-3 p-3 bg-white rounded border"
+                    >
+                      <div class="mb-1 font-semibold">
+                        Q{{ idx+1 }}. {{ q.question }}
+                      </div>
+                      <div>
+                        <span class="font-mono whitespace-pre-line"
+                          >{{ q.query }}</span
+                        >
+                      </div>
+                      <div class="mt-1 text-sm text-gray-800">
+                        <span class="font-bold text-blue-800">정답:</span> {{
+                        q.answer }}<br />
+                        <span class="font-bold text-green-700">결과:</span> {{
+                        q.result }}<br />
+                        <span class="font-bold text-gray-500">해설:</span> {{
+                        q.explanation }}
+                      </div>
+                    </li>
+                  </ul>
+                  <button
+                    @click="restart"
+                    class="px-6 py-2 font-bold rounded bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    다시 풀기
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              v-else
+              class="mt-16 text-center text-lg text-red-500 font-bold"
+            >
+              <i class="fas fa-exclamation-triangle mr-2"></i> 문제 데이터를
+              불러올 수 없습니다<br />
+              CSV 파일 구조를 확인해주세요
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <script>
+      const CSV_FILE_URL =
+        "https://yongseok-dev.github.io/quiz/SQL/query/SQL_%EC%BF%BC%EB%A6%AC%EA%B2%B0%EA%B3%BC%EB%AC%B8%EC%A0%9C_50%EA%B0%9C.csv";
+      const HEADER_MAP = {
+        번호: "number",
+        분류: "category",
+        테이블: "table",
+        쿼리: "query",
+        질문: "question",
+        선택지1: "choices[0]",
+        선택지2: "choices[1]",
+        선택지3: "choices[2]",
+        선택지4: "choices[3]",
+        정답: "answer",
+        결과: "result",
+        해설: "explanation",
+      };
+
+      const app = Vue.createApp({
+        data() {
+          return {
+            quiz: [],
+            currentIndex: 0,
+            selected: null,
+            answered: false,
+            answers: [],
+            loading: true,
+            showResult: false,
+          };
+        },
+        computed: {
+          currentQuestion() {
+            return this.quiz[this.currentIndex] || {};
+          },
+          correctCount() {
+            return this.answers.filter(
+              (ans, idx) => ans === this.quiz[idx]?.answer
+            ).length;
+          },
+          isCorrect() {
+            console.log(
+              this.answers[this.currentIndex],
+              this.currentQuestion.answer
+            );
+            return (
+              this.answers[this.currentIndex] === this.currentQuestion.answer
+            );
+          },
+        },
+        methods: {
+          submit() {
+            if (this.selected === null) return;
+            this.answered = true;
+            const selectedChoice =
+              this.currentQuestion.choices[this.selected][0];
+            this.answers[this.currentIndex] = selectedChoice;
+          },
+          next() {
+            if (this.currentIndex < this.quiz.length - 1) {
+              this.currentIndex++;
+              this.selected = null;
+              this.answered = !!this.answers[this.currentIndex];
+            }
+          },
+          prev() {
+            if (this.currentIndex > 0) {
+              this.currentIndex--;
+              this.selected = null;
+              this.answered = !!this.answers[this.currentIndex];
+            }
+          },
+          restart() {
+            this.currentIndex = 0;
+            this.selected = null;
+            this.answered = false;
+            this.answers = [];
+            this.showResult = false;
+          },
+          feedbackClass(idx) {
+            if (!this.answered) return "";
+            const answerIdx = this.currentQuestion.choices.findIndex(
+              (c) => c === this.currentQuestion.answer
+            );
+            if (idx === answerIdx) return "correct";
+            if (this.selected === idx && !this.isCorrect) return "incorrect";
+            return "";
+          },
+          showCorrectIcon(idx) {
+            if (!this.answered) return false;
+            return (
+              this.currentQuestion.choices[idx] === this.currentQuestion.answer
+            );
+          },
+          showIncorrectIcon(idx) {
+            if (!this.answered) return false;
+            return this.selected === idx && !this.isCorrect;
+          },
+        },
+        mounted() {
+          Papa.parse(CSV_FILE_URL, {
+            download: true,
+            header: true,
+            complete: (results) => {
+              // Map headers and fix answer choices
+              this.quiz = results.data
+                .map((row) => {
+                  return {
+                    number: row["번호"],
+                    category: row["분류"],
+                    table: row["테이블"],
+                    query: row["쿼리"],
+                    question: row["질문"],
+                    choices: [
+                      row["선택지1"],
+                      row["선택지2"],
+                      row["선택지3"],
+                      row["선택지4"],
+                    ],
+                    answer: row["정답"],
+                    result: row["결과"],
+                    explanation: row["해설"],
+                  };
+                })
+                .filter((q) => q.question);
+              this.loading = false;
+            },
+            error: (err) => {
+              this.loading = false;
+            },
+          });
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
